@@ -7,7 +7,7 @@ object DeadCell extends Cell
 
 case class Specification(born: Seq[Int], live: Seq[Int])
 
-class Window(target: Cell, neighbours: Seq[Cell]) {
+case class Window(target: Cell, neighbours: Seq[Cell]) {
   def toCell(implicit spec: Specification): Cell =
     if (isLive(spec))
       return LiveCell
