@@ -5,7 +5,13 @@ sealed trait Cell
 object LiveCell extends Cell
 object DeadCell extends Cell
 
-case class Specification(born: Seq[Int], live: Seq[Int])
+case class Specification(born: Seq[Int], live: Seq[Int]) {
+  def get(target: Cell): Seq[Int] =
+    if (target eq LiveCell)
+      return live
+    else
+      return born
+}
 
 case class Window(target: Cell, neighbours: Seq[Cell]) {
   def toCell(implicit spec: Specification): Cell =
@@ -15,10 +21,7 @@ case class Window(target: Cell, neighbours: Seq[Cell]) {
       return DeadCell
 
   def isLive(implicit spec: Specification): Boolean =
-    if (target eq LiveCell)
-      spec.live contains livingNeighbours
-    else
-      spec.born contains livingNeighbours
+    spec.get(target) contains livingNeighbours
 
   val livingNeighbours: Int =
     neighbours.filter(_ eq LiveCell).length
