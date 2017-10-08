@@ -60,5 +60,5 @@ case class WorldCell[P <: Position[P]](cell: Cell, position: P)
 case class WorldWindow[P <: Position[P]](window: Window, position: P)
 
 case class World[P <: Position[P]](cells: Seq[WorldCell[P]]) {
-  require(! cells.exists(_.cell.isDead), "This implementation creates sparse worlds that contain only live cells")
+  require(! cells.exists(_.cell.isDead), "This implementation handles sparse worlds that contain only live cells")
 }
