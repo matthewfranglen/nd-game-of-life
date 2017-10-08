@@ -39,12 +39,12 @@ case class Window(target: Cell, neighbours: Seq[Cell]) {
 }
 
 sealed trait Position[P <: Position[P]] {
-  def neighbours: Seq[Position[P]]
+  def neighbours: Seq[P]
   def distanceTo(other: P): Int
 }
 
 case class Position2d(x: Int, y: Int) extends Position[Position2d] {
-  val neighbours = Seq(1,0,-1).zip(Seq(1,0,-1))
+  def neighbours = Seq(1,0,-1).zip(Seq(1,0,-1))
     .filter({ case (xOffset, yOffset) => xOffset != 0 && yOffset != 0 })
     .map({ case (xOffset, yOffset) => Position2d(x + xOffset, y + yOffset) })
 
@@ -53,7 +53,7 @@ case class Position2d(x: Int, y: Int) extends Position[Position2d] {
 }
 
 case class PositionNd(coordinates: Seq[Int]) extends Position[PositionNd] {
-  val neighbours = {
+  def neighbours = {
     val offsets = coordinates.map(_ => Seq(-1, 0, 1))
 
     // This creates the list of permutations of offsets,
@@ -76,10 +76,40 @@ case class PositionNd(coordinates: Seq[Int]) extends Position[PositionNd] {
       .max
 }
 
-case class WorldCell[P <: Position[P]](cell: Cell, position: P)
+case class WorldCell[P <: Position[P]](cell: Cell, position: P) {
+  val isLive = cell.isLive
+}
 
 case class WorldWindow[P <: Position[P]](window: Window, position: P)
 
 case class World[P <: Position[P]](cells: Seq[WorldCell[P]]) {
-  require(! cells.exists(_.cell.isDead), "This implementation handles sparse worlds that contain only live cells")
+  require(cells.forall(_.isLive), "This implementation handles sparse worlds that contain only live cells")
+
+  val cellsByPosition = cells.map(worldCell => worldCell.position -> worldCell).toMap
+
+  def next(implicit spec: Specification): World[P] = {
+    val liveWindows = cells.map(toWindow(_))
+    val deadWindows = cells.flatMap(worldCell => {
+      worldCell.position.neighbours
+        .filter(cellsByPosition contains _)
+        .map(WorldCell(DeadCell, _))
+        .map(toWindow(_))
+    })
+
+    val worldCells = Seq(liveWindows, deadWindows)
+      .flatten
+      .map(worldWindow => WorldCell(spec.toCell(worldWindow.window), worldWindow.position))
+      .filter(_.isLive)
+
+    World(worldCells)
+  }
+
+  def toWindow(worldCell: WorldCell[P]): WorldWindow[P] = {
+    val neighbours = worldCell.position.neighbours
+      .map(cellsByPosition.get(_))
+      .filter(_.isDefined)
+      .map(_.get.cell)
+    val window = Window(worldCell.cell, neighbours)
+    WorldWindow(window, worldCell.position)
+  }
 }
