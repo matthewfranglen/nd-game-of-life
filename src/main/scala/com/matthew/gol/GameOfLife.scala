@@ -44,9 +44,14 @@ sealed trait Position[P <: Position[P]] {
 }
 
 case class Position2d(x: Int, y: Int) extends Position[Position2d] {
-  def neighbours = Seq(1,0,-1).zip(Seq(1,0,-1))
-    .filter({ case (xOffset, yOffset) => xOffset != 0 && yOffset != 0 })
-    .map({ case (xOffset, yOffset) => Position2d(x + xOffset, y + yOffset) })
+  def neighbours = {
+    val offsets = Seq(1, 0, -1)
+
+    offsets
+      .flatMap(xOffset => offsets.map(yOffset => xOffset -> yOffset))
+      .filter({ case (xOffset, yOffset) => xOffset != 0 || yOffset != 0 })
+      .map({ case (xOffset, yOffset) => Position2d(x + xOffset, y + yOffset) })
+  }
 
   def distanceTo(other: Position2d): Int =
     Math.max(Math.abs(x - other.x), Math.abs(y - other.y))
@@ -89,12 +94,11 @@ case class World[P <: Position[P]](cells: Seq[WorldCell[P]]) {
 
   def next(implicit spec: Specification): World[P] = {
     val liveWindows = cells.map(toWindow(_))
-    val deadWindows = cells.flatMap(worldCell => {
-      worldCell.position.neighbours
-        .filter(cellsByPosition contains _)
-        .map(WorldCell(DeadCell, _))
-        .map(toWindow(_))
-    })
+    val deadWindows = cells.flatMap(_.position.neighbours)
+      .distinct
+      .filter(! cellsByPosition.contains(_))
+      .map(WorldCell(DeadCell, _))
+      .map(toWindow(_))
 
     val worldCells = Seq(liveWindows, deadWindows)
       .flatten
