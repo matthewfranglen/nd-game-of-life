@@ -5,10 +5,10 @@ sealed trait Cell {
   def isDead: Boolean = ! isLive
 }
 
-object LiveCell extends Cell {
+case object LiveCell extends Cell {
   val isLive = true
 }
-object DeadCell extends Cell {
+case object DeadCell extends Cell {
   val isLive = false
 }
 

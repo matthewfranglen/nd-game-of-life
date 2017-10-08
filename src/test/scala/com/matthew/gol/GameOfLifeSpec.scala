@@ -34,4 +34,20 @@ class WindowSpec extends FlatSpec with Matchers {
 
     spec.toCell(window) shouldEqual DeadCell
   }
+
+  "The World class" should "create the next barren world" in {
+    implicit val spec = Specification(Seq(3), Seq(3, 4))
+    val cell = WorldCell(LiveCell, Position2d(0, 0))
+    val world = World(Seq(cell))
+
+    world.next shouldEqual World(Seq())
+  }
+
+  "The World class" should "create the next living world" in {
+    implicit val spec = Specification(Seq(3), Seq(0, 3, 4))
+    val cell = WorldCell(LiveCell, Position2d(0, 0))
+    val world = World(Seq(cell))
+
+    world.next shouldEqual world
+  }
 }
