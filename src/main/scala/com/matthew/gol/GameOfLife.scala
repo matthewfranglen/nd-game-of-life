@@ -46,4 +46,11 @@ case class PositionNd(coordinates: Seq[Int]) extends Position[PositionNd] {
 
 case class WorldCell[P <: Position[P]](cell: Cell, position: P)
 
-case class World[P <: Position[P]](cells: Seq[WorldCell[P]])
+case class WorldWindow[P <: Position[P]](window: Window, position: P)
+
+class World[P <: Position[P]](cells: Seq[WorldCell[P]])
+
+object World {
+  def apply[P <: Position[P]](cells: Seq[WorldCell[P]]): World[P] =
+    new World(cells.filter(_.cell eq LiveCell))
+}
