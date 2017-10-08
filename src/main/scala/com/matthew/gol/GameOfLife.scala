@@ -1,13 +1,20 @@
 package com.matthew.gol
 
-sealed trait Cell
+sealed trait Cell {
+  def isLive: Boolean
+  def isDead: Boolean = ! isLive
+}
 
-object LiveCell extends Cell
-object DeadCell extends Cell
+object LiveCell extends Cell {
+  val isLive = true
+}
+object DeadCell extends Cell {
+  val isLive = false
+}
 
 case class Specification(born: Seq[Int], live: Seq[Int]) {
   def get(target: Cell): Seq[Int] =
-    if (target eq LiveCell)
+    if (target.isLive)
       return live
     else
       return born
@@ -24,7 +31,7 @@ case class Window(target: Cell, neighbours: Seq[Cell]) {
     spec.get(target) contains livingNeighbours
 
   val livingNeighbours: Int =
-    neighbours.filter(_ eq LiveCell).length
+    neighbours.filter(_.isLive).length
 }
 
 sealed trait Position[P <: Position[P]] {
@@ -52,5 +59,5 @@ class World[P <: Position[P]](cells: Seq[WorldCell[P]])
 
 object World {
   def apply[P <: Position[P]](cells: Seq[WorldCell[P]]): World[P] =
-    new World(cells.filter(_.cell eq LiveCell))
+    new World(cells.filter(_.cell.isLive))
 }
