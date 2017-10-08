@@ -15,25 +15,27 @@ object DeadCell extends Cell {
 case class Specification(born: Seq[Int], live: Seq[Int]) {
   require(! born.contains(0), "This implementation does not permit cell birth with zero live neighbours")
 
-  def get(target: Cell): Seq[Int] =
-    if (target.isLive)
+  def toCell(window: Window): Cell =
+    if (isLive(window))
+      return LiveCell
+    else
+      return DeadCell
+
+  private def isLive(window: Window): Boolean =
+    getRules(window) contains window.livingNeighbours
+
+  private def getRules(window: Window): Seq[Int] =
+    if (window.isLive)
       return live
     else
       return born
 }
 
 case class Window(target: Cell, neighbours: Seq[Cell]) {
-  def toCell(implicit spec: Specification): Cell =
-    if (isLive(spec))
-      return LiveCell
-    else
-      return DeadCell
-
-  def isLive(implicit spec: Specification): Boolean =
-    spec.get(target) contains livingNeighbours
-
   val livingNeighbours: Int =
     neighbours.filter(_.isLive).length
+
+  val isLive = target.isLive
 }
 
 sealed trait Position[P <: Position[P]] {
