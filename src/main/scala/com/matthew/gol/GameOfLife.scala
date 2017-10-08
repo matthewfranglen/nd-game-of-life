@@ -57,9 +57,6 @@ case class WorldCell[P <: Position[P]](cell: Cell, position: P)
 
 case class WorldWindow[P <: Position[P]](window: Window, position: P)
 
-class World[P <: Position[P]](cells: Seq[WorldCell[P]])
-
-object World {
-  def apply[P <: Position[P]](cells: Seq[WorldCell[P]]): World[P] =
-    new World(cells.filter(_.cell.isLive))
+case class World[P <: Position[P]](cells: Seq[WorldCell[P]]) {
+  require(! cells.exists(_.cell.isDead), "This implementation creates sparse worlds that contain only live cells")
 }
