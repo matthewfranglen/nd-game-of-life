@@ -13,6 +13,8 @@ object DeadCell extends Cell {
 }
 
 case class Specification(born: Seq[Int], live: Seq[Int]) {
+  require(! born.contains(0), "This implementation does not permit cell birth with zero live neighbours")
+
   def get(target: Cell): Seq[Int] =
     if (target.isLive)
       return live
