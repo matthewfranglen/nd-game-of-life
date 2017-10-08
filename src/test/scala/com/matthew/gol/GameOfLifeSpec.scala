@@ -6,7 +6,9 @@ class WindowSpec extends FlatSpec with Matchers {
   "The Window class" should "count the number of living cells" in {
     Window(LiveCell, Seq(LiveCell, DeadCell)).livingNeighbours shouldEqual 1
   }
+}
 
+class SpecificationSpec extends FlatSpec with Matchers {
   "The Specification class" should "create live cells from dead cells when there are enough living neighbours" in {
     val spec = Specification(Seq(3), Seq(3, 4))
     val window = Window(DeadCell, Seq(LiveCell, LiveCell, LiveCell))
@@ -34,7 +36,9 @@ class WindowSpec extends FlatSpec with Matchers {
 
     spec.toCell(window) shouldEqual DeadCell
   }
+}
 
+class WorldSpec extends FlatSpec with Matchers {
   "The World class" should "create the next barren world" in {
     implicit val spec = Specification(Seq(3), Seq(3, 4))
     val cell = WorldCell(LiveCell, Position2d(0, 0))
