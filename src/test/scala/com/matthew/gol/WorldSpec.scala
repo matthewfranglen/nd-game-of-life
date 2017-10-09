@@ -2,7 +2,7 @@ package com.matthew.gol
 
 import org.scalatest._
 
-class Position2dSpec extends FlatSpec with Matchers {
+class WorldPosition2dSpec extends FlatSpec with Matchers {
   "The World class" should "create the next barren world" in {
     val cell = WorldCell(LiveCell, Position2d(0, 0))
     val world = World(Seq(cell))
@@ -45,7 +45,7 @@ class Position2dSpec extends FlatSpec with Matchers {
   }
 }
 
-class PositionNdSpec extends FlatSpec with Matchers {
+class WorldPositionNdSpec extends FlatSpec with Matchers {
   "The World class" should "create the next barren world" in {
     val cell = WorldCell(LiveCell, PositionNd(Seq(0, 0)))
     val world = World(Seq(cell))
