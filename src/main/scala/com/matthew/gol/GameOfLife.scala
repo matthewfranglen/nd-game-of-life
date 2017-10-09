@@ -2,12 +2,14 @@ package com.matthew.gol
 
 sealed trait Cell {
   def isLive: Boolean
+
   def isDead: Boolean = ! isLive
 }
 
 case object LiveCell extends Cell {
   val isLive = true
 }
+
 case object DeadCell extends Cell {
   val isLive = false
 }
@@ -16,19 +18,13 @@ case class Specification(born: Seq[Int], live: Seq[Int]) {
   require(! born.contains(0), "This implementation does not permit cell birth with zero live neighbours")
 
   def toCell(window: Window): Cell =
-    if (isLive(window))
-      return LiveCell
-    else
-      return DeadCell
+    if (isLive(window)) LiveCell else DeadCell
 
   private def isLive(window: Window): Boolean =
     getRules(window) contains window.livingNeighbours
 
   private def getRules(window: Window): Seq[Int] =
-    if (window.isLive)
-      return live
-    else
-      return born
+    if (window.isLive) live else born
 }
 
 case class Window(target: Cell, neighbours: Seq[Cell]) {
@@ -40,6 +36,7 @@ case class Window(target: Cell, neighbours: Seq[Cell]) {
 
 sealed trait Position[P <: Position[P]] {
   def neighbours: Seq[P]
+
   def distanceTo(other: P): Int
 }
 
