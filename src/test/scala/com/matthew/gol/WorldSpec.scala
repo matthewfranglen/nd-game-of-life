@@ -4,7 +4,6 @@ import org.scalatest._
 
 class Position2dSpec extends FlatSpec with Matchers {
   "The World class" should "create the next barren world" in {
-    implicit val spec = Specification(Seq(3), Seq(2, 3))
     val cell = WorldCell(LiveCell, Position2d(0, 0))
     val world = World(Seq(cell))
 
@@ -20,7 +19,6 @@ class Position2dSpec extends FlatSpec with Matchers {
   }
 
   "The World class" should "create the next sustaining world" in {
-    implicit val spec = Specification(Seq(3), Seq(2, 3))
     val cells = Seq(
       WorldCell(LiveCell, Position2d(1, 0)),
       WorldCell(LiveCell, Position2d(0, 1)),
@@ -33,7 +31,6 @@ class Position2dSpec extends FlatSpec with Matchers {
   }
 
   "The World class" should "create the next thriving world" in {
-    implicit val spec = Specification(Seq(3), Seq(2, 3))
     val cells = Seq(
       WorldCell(LiveCell, Position2d(1, 1)),
       WorldCell(LiveCell, Position2d(-1, 1)),
@@ -50,7 +47,6 @@ class Position2dSpec extends FlatSpec with Matchers {
 
 class PositionNdSpec extends FlatSpec with Matchers {
   "The World class" should "create the next barren world" in {
-    implicit val spec = Specification(Seq(3), Seq(2, 3))
     val cell = WorldCell(LiveCell, PositionNd(Seq(0, 0)))
     val world = World(Seq(cell))
 
@@ -66,7 +62,6 @@ class PositionNdSpec extends FlatSpec with Matchers {
   }
 
   "The World class" should "create the next sustaining world" in {
-    implicit val spec = Specification(Seq(3), Seq(2, 3))
     val cells = Seq(
       WorldCell(LiveCell, PositionNd(Seq(1, 0))),
       WorldCell(LiveCell, PositionNd(Seq(0, 1))),
@@ -79,7 +74,6 @@ class PositionNdSpec extends FlatSpec with Matchers {
   }
 
   "The World class" should "create the next thriving world" in {
-    implicit val spec = Specification(Seq(3), Seq(2, 3))
     val cells = Seq(
       WorldCell(LiveCell, PositionNd(Seq(1, 1))),
       WorldCell(LiveCell, PositionNd(Seq(-1, 1))),

@@ -10,3 +10,6 @@ case class Specification(born: Seq[Int], live: Seq[Int]) {
     if (target.isLive) live else born
 }
 
+object Specification {
+  implicit val gameOfLife = Specification(Seq(3), Seq(2, 3))
+}
