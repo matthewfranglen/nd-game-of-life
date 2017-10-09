@@ -26,6 +26,13 @@ class PositionNdSpec extends FlatSpec with Matchers {
     one distanceTo two shouldEqual 2
   }
 
+  "The Nd Position class" should "have 0 distinct neighbours for 0 dimensional positions" in {
+    val neighbours = PositionNd(Seq()).neighbours
+
+    neighbours.length shouldEqual 0
+    neighbours.distinct.length shouldEqual 0
+  }
+
   "The Nd Position class" should "have 2 distinct neighbours for 1 dimensional positions" in {
     val neighbours = PositionNd(Seq(0)).neighbours
 

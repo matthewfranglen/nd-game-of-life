@@ -38,12 +38,16 @@ final private object Offset {
 
   def permute(dimensions: Seq[Int]): Seq[Seq[Int]] = {
     val offsetsByDimension = dimensions map { _ => offsets }
-    val firstOffsets = offsetsByDimension.head map { Seq(_) }
-    val permutedOffsets = offsetsByDimension.tail
-      .foldLeft(firstOffsets)(combine(_, _))
-      .filter { isValid _ }
 
-    return apply(permutedOffsets, dimensions)
+    offsetsByDimension.headOption.map(first => {
+        val firstOffsets = first map { Seq(_) }
+        val permutedOffsets = offsetsByDimension.tail
+          .foldLeft(firstOffsets)(combine(_, _))
+          .filter { isValid _ }
+
+        apply(permutedOffsets, dimensions)
+      })
+      .getOrElse(Seq())
   }
 
   private def combine(offsetsCollection: Seq[Seq[Int]], dimension: Seq[Int]): Seq[Seq[Int]] =
