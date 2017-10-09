@@ -1,5 +1,7 @@
 package com.matthew.gol
 
+import java.lang.Math.{abs,max}
+
 sealed trait Position[P <: Position[P]] {
   def neighbours: Seq[P]
 
@@ -7,39 +9,52 @@ sealed trait Position[P <: Position[P]] {
 }
 
 case class Position2d(x: Int, y: Int) extends Position[Position2d] {
-  def neighbours = {
-    val offsets = Seq(1, 0, -1)
+  def neighbours: Seq[Position2d] =
+    Offset.permute(Seq(x, y))
+      .map { case Seq(x, y) => Position2d(x, y) }
 
-    offsets
-      .flatMap(xOffset => offsets.map(yOffset => xOffset -> yOffset))
-      .filter({ case (xOffset, yOffset) => xOffset != 0 || yOffset != 0 })
-      .map({ case (xOffset, yOffset) => Position2d(x + xOffset, y + yOffset) })
-  }
 
   def distanceTo(other: Position2d): Int =
-    Math.max(Math.abs(x - other.x), Math.abs(y - other.y))
+    max(abs(x - other.x), abs(y - other.y))
 }
 
 case class PositionNd(coordinates: Seq[Int]) extends Position[PositionNd] {
-  def neighbours = {
-    val offsets = coordinates.map(_ => Seq(-1, 0, 1))
-
-    // This creates the list of permutations of offsets,
-    // filters the single one which is no offset (all dimension offsets are zero),
-    // and then applies them to the coordinates to produce the neighbouring coordinates.
-    // Once that has been done they can be converted into positions.
-    offsets.tail
-      .foldLeft(offsets.head.map(Seq(_)))(
-        (existingOffsets, dimensionOffsets) => existingOffsets.flatMap(offset => dimensionOffsets.map(offset :+ _))
-      )
-      .filter(_.exists(_ != 0))
-      .map(coordinates.zip(_).map({ case (coordinate, offset) => coordinate + offset }))
-      .map(PositionNd(_))
+  def neighbours: Seq[PositionNd] = {
+    Offset.permute(coordinates)
+      .map { PositionNd(_) }
   }
 
   def distanceTo(other: PositionNd): Int =
     coordinates
       .zip(other.coordinates)
-      .map({ case (a, b) => Math.abs(a - b) })
+      .map { case (a, b) => abs(a - b) }
       .max
+}
+
+final private object Offset {
+  val offsets = Seq(1, 0, -1)
+
+  def permute(dimension: Int): Seq[Int] = offsets.map(_ + dimension)
+
+  def permute(dimensions: Seq[Int]): Seq[Seq[Int]] = {
+    val offsetsByDimension = dimensions map { _ => offsets }
+    val firstOffsets = offsetsByDimension.head map { Seq(_) }
+    val permutedOffsets = offsetsByDimension.tail
+      .foldLeft(firstOffsets)(combine(_, _))
+      .filter { isValid _ }
+
+    return apply(permutedOffsets, dimensions)
+  }
+
+  private def combine(offsetsCollection: Seq[Seq[Int]], dimension: Seq[Int]): Seq[Seq[Int]] =
+    offsetsCollection flatMap { offset => dimension.map(offset :+ _) }
+
+  private def isValid(offsets: Seq[Int]): Boolean = offsets.exists(_ != 0)
+
+  private def apply(offsetsCollection: Seq[Seq[Int]], dimensions: Seq[Int]): Seq[Seq[Int]] =
+    offsetsCollection map {
+      offsets => offsets
+        .zip(dimensions)
+        .map { case (offset, dimension) => offset + dimension }
+    }
 }
