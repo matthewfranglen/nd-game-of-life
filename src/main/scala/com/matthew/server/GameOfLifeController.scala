@@ -25,9 +25,13 @@ class GameOfLifeController @Inject()(
   }
 }
 
-private case class ControllerWorld(cells: Seq[ControllerCell]) {
+private case class ControllerWorld(cells: Seq[Seq[Int]]) {
   def toWorld: World[PositionNd] =
-    World(cells.map { _.toCell })
+    World(
+      cells
+        .map { PositionNd(_) }
+        .map { WorldCell(LiveCell, _) }
+    )
 }
 
 private object ControllerWorld {
@@ -35,16 +39,6 @@ private object ControllerWorld {
     ControllerWorld(
       world.cells
         .filter { _.isLive }
-        .map { ControllerCell.toControllerCell _ }
+        .map { _.position.coordinates }
     )
-}
-
-private case class ControllerCell(coordinates: Seq[Int]) {
-  def toCell: WorldCell[PositionNd] =
-    WorldCell(LiveCell, PositionNd(coordinates))
-}
-
-private object ControllerCell {
-  def toControllerCell(cell: WorldCell[PositionNd]): ControllerCell =
-    ControllerCell(cell.position.coordinates)
 }
