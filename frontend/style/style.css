@@ -1,0 +1,47 @@
+/* colors:
+ * text #141301
+ * background: #e5e7e6
+ * borders: b7b5b3
+ * mood: #483d03
+ * warn: #b80c09
+ */
+
+body {
+  background-color: #fefefe;
+  color: #141301;
+}
+
+.header {
+  border-bottom: 1px solid #b7b5b3;
+  border-radius: 0;
+  box-shadow: 0 2px 2px 2px #e5e7e6;
+}
+
+.header__brand {
+  color: #483d03;
+}
+
+.home__intro,
+.home__display {
+  margin-bottom: 16px;
+  margin-left: 0;
+
+  text-align: center;
+}
+
+.display__line {
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.footer {
+  border-top: 2px solid #b7b5b3;
+  border-radius: 0;
+
+  margin-top: 32px;
+  padding: 32px 0;
+}
+
+.footer__brand {
+  margin-left: 0;
+}
