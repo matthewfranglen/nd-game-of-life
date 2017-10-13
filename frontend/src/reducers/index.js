@@ -10,11 +10,21 @@ const actionHandlers = {};
 actionHandlers[FETCH_MOVE_REQUEST] = (state) =>
   state.merge({ isFetching: true });
 
-actionHandlers[FETCH_MOVE_SUCCESS] = (state, { cells }) =>
-  state.merge({
-    isFetching: false,
-    cells,
+actionHandlers[FETCH_MOVE_SUCCESS] = (state, { cells }) => {
+  const grid = Array.from({ length: 10 })
+    .map((_outer, y) => Array.from({ length: 10 })
+      .map((_inner, x) => ({ isOn: false, x, y }))
+    );
+
+  cells.forEach(([x, y]) => {
+    grid[y][x].isOn = true;
   });
+
+  return state.merge({
+    isFetching: false,
+    grid,
+  });
+};
 
 actionHandlers[TURN_CELL_ON] = (state, { x, y }) => {
   const cells = state.get('cells');

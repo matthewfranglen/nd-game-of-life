@@ -10,15 +10,23 @@ export function requestMove() {
   return { type: FETCH_MOVE_REQUEST };
 }
 
-export function receiveMove(board) {
-  return { type: FETCH_MOVE_SUCCESS, board };
+export function receiveMove(cells) {
+  return { type: FETCH_MOVE_SUCCESS, cells };
 }
 
-export function fetchMove(board) {
+export function fetchMove(cells) {
   return (dispatch) => {
     dispatch(requestMove());
 
-    return fetch('/next', { data: board })
+    const liveCells = cells
+      .map(row => row.filter(({ isOn }) => isOn))
+      .reduce((acc, val) => acc.concat(val), [])
+      .map(({ x, y }) => [x, y]);
+
+    const data = new FormData();
+    data.append('json', JSON.stringify(liveCells));
+
+    return fetch('/next', { method: 'POST', body: data })
       .then(response => response.json())
       .then(json => dispatch(receiveMove(json)));
   };
