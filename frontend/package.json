@@ -89,7 +89,7 @@
     }
   },
   "scripts": {
-    "start": "webpack --display-error-details",
+    "start": "webpack-dev-server --port 5000 --content-base dist/ --history-api-fallback",
     "build": "webpack --config webpack.production.config.js",
     "eslint": "eslint src __tests__ webpack.config.js webpack.production.config.js",
     "stylelint": "stylelint \"style/**/*.css\"",
