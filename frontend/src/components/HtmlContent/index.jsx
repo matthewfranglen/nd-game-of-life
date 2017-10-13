@@ -10,5 +10,8 @@ HtmlContent.propTypes = {
   className: PropTypes.string,
   html: PropTypes.string.isRequired,
 };
+HtmlContent.defaultProps = {
+  className: undefined,
+};
 
 export default HtmlContent;

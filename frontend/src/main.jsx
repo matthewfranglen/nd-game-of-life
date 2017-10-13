@@ -15,5 +15,5 @@ ReactDOM.render(
   <Provider store={store}>
     <Routes />
   </Provider>,
-  container
+  container,
 );

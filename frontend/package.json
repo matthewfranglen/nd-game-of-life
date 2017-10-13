@@ -10,6 +10,7 @@
     "bootstrap": "^4.0.0-alpha.5",
     "classnames": "^2.2.5",
     "fastclick": "^1.0.6",
+    "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.1.1",
     "popper.js": "^1.12.5",
     "prop-types": "^15.6.0",
@@ -51,6 +52,7 @@
     "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^1.1.5",
     "html-loader": "^0.5.1",
+    "html-webpack-harddisk-plugin": "^0.1.0",
     "html-webpack-plugin": "^2.26.0",
     "imports-loader": "^0.7.0",
     "jest": "^21.2.1",
@@ -83,7 +85,16 @@
   },
   "eslintConfig": {
     "parser": "babel-eslint",
-    "extends": "airbnb"
+    "extends": "airbnb",
+    "plugins": [
+      "react"
+    ],
+    "env": {
+      "browser": true
+    },
+    "rules": {
+      "import/no-named-as-default": 0
+    }
   },
   "jest": {
     "setupFiles": [
@@ -101,7 +112,7 @@
     }
   },
   "scripts": {
-    "start": "webpack-dev-server --port 5000 --content-base ./dist --history-api-fallback --hot",
+    "start": "webpack-dev-server --content-base ./dist",
     "build": "webpack --config webpack.production.config.js",
     "eslint": "eslint src __tests__ webpack.config.js webpack.production.config.js",
     "stylelint": "stylelint \"style/**/*.css\"",

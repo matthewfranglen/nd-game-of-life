@@ -9,14 +9,18 @@ const toggleOnClick = (x, y, isOn, turnCellOn, turnCellOff) => {
   return () => turnCellOn(x, y);
 };
 
-const Cell = ({ x, y, isOn, turnCellOn, turnCellOff }) => (
-  <Button
-    id={`cell--${x}:${y}`}
-    className={isOn ? 'cell--on' : 'cell--off'}
-    title={isOn ? 'On' : 'Off'}
-    onClick={toggleOnClick(x, y, isOn, turnCellOn, turnCellOff)}
-  />
-);
+const Cell = (props) => {
+  const { x, y, isOn } = props;
+
+  return (
+    <Button
+      id={`cell--${x}:${y}`}
+      className={isOn ? 'cell--on' : 'cell--off'}
+      title={isOn ? 'On' : 'Off'}
+      onClick={toggleOnClick(x, y, isOn, props.turnCellOn, props.turnCellOff)}
+    />
+  );
+};
 
 Cell.propTypes = {
   x: PropTypes.number.isRequired,

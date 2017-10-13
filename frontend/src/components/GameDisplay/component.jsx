@@ -2,22 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Cell from '../Cell';
 
-const makeCells = (row) => row.map(({ x, y, isOn }) => (
+const makeCells = row => row.map(({ x, y, isOn }) => (
   <Cell
-    key={`${x}-${y}`}
+    key={`${x}:${y}`}
     x={x}
     y={y}
     isOn={isOn}
   />
 ));
 
-const makeRows = (grid) => grid.map((row, index) => (
-  <div key={index} className="game--row">
+const makeRows = grid => grid.map(row => (
+  <div key={`${row[0].x}:${row[0].y}`} className="game--row">
     {makeCells(row)}
   </div>
 ));
 
-const GameDisplay = (props) => (
+const GameDisplay = props => (
   <div className={props.className}>
     {makeRows(props.cells)}
   </div>
@@ -25,7 +25,10 @@ const GameDisplay = (props) => (
 
 GameDisplay.propTypes = {
   className: PropTypes.string,
-  cells: PropTypes.array.isRequired,
+  cells: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
+};
+GameDisplay.defaultProps = {
+  className: undefined,
 };
 
 export default GameDisplay;

@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
 
-const App = (props) => (
+const App = ({ children }) => (
   <div>
     <Header />
-    {props.children}
+    {children}
     <Footer />
   </div>
 );

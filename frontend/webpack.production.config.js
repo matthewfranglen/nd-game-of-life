@@ -1,3 +1,4 @@
+/* eslint import/no-extraneous-dependencies: 0 */
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -6,7 +7,7 @@ module.exports = {
   entry: {
     app: [
       'bootstrap-loader',
-      path.resolve(__dirname, 'src/main.js'),
+      path.resolve(__dirname, 'src/main.jsx'),
       path.resolve(__dirname, 'style/style.css'),
     ],
   },
@@ -40,5 +41,8 @@ module.exports = {
       { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
       { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
     ],
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
 };

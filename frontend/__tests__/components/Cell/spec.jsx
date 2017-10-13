@@ -1,9 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Cell } from '../../../src/components/Cell';
 import { Button } from 'react-bootstrap';
 
-const makeProps = (isOn) => ({
+import { Cell } from '../../../src/components/Cell';
+
+const makeProps = isOn => ({
   x: 1,
   y: 2,
   isOn,
