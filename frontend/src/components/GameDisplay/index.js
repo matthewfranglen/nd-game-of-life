@@ -1,9 +1,7 @@
 import { connect } from 'react-redux';
 import GameDisplay from './component';
 
-const mapStateToProps = (state) => ({
-  cells: state.get('cells').toJS(),
-});
+const mapStateToProps = state => ({ cells: state.cells });
 
 const VisibleGameDisplay = connect(mapStateToProps)(GameDisplay);
 

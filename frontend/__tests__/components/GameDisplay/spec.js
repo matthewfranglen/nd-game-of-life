@@ -9,7 +9,7 @@ const makeProps = () => ({
   ],
 });
 
-describe('Text Display', () => {
+describe('Game Display', () => {
 
   it('creates a game display area', () => {
     const props = makeProps();

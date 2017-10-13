@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 
-const HtmlContent = (props) => (
+const HtmlContent = props => (
   <Row className={props.className} dangerouslySetInnerHTML={{ __html: props.html }} />
 );
 

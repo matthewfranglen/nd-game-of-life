@@ -1,3 +1,5 @@
+import R from 'ramda';
+
 import {
   FETCH_MOVE_REQUEST,
   FETCH_MOVE_SUCCESS,
@@ -7,39 +9,40 @@ import {
 
 const actionHandlers = {};
 
-actionHandlers[FETCH_MOVE_REQUEST] = (state) =>
-  state.merge({ isFetching: true });
+function setCell(cells, x, y, isOn) {
+  const path = R.lensPath([y, x, 'isOn']);
+
+  return R.set(path, isOn, cells);
+}
+
+actionHandlers[FETCH_MOVE_REQUEST] = state =>
+  Object.assign({}, state, { isFetching: true });
 
 actionHandlers[FETCH_MOVE_SUCCESS] = (state, { cells }) => {
   const grid = Array.from({ length: 10 })
     .map((_outer, y) => Array.from({ length: 10 })
-      .map((_inner, x) => ({ isOn: false, x, y }))
-    );
+      .map((_inner, x) => ({ isOn: false, x, y })));
 
   cells.forEach(([x, y]) => {
     grid[y][x].isOn = true;
   });
 
-  return state.merge({
-    isFetching: false,
-    grid,
-  });
+  return Object.assign({}, state, { isFetching: false, cells: grid });
 };
 
 actionHandlers[TURN_CELL_ON] = (state, { x, y }) => {
-  const cells = state.get('cells');
+  const cells = setCell(state.cells, x, y, true);
 
-  if (cells.some(([cx, cy]) => x === cx && y === cy)) {
-    return state;
-  }
-
-  return state.merge({ cells: cells.push([x, y]) });
+  return Object.assign({}, state, { cells });
 };
 
-actionHandlers[TURN_CELL_OFF] = (state, { x, y }) =>
-  state.merge({ cells: state.get('cells').filter(([cx, cy]) => cx !== x || cy !== y) });
+actionHandlers[TURN_CELL_OFF] = (state, { x, y }) => {
+  const cells = setCell(state.cells, x, y, false);
 
-export function createReducer(initialState) {
+  return Object.assign({}, state, { cells });
+};
+
+export default function createReducer(initialState) {
   return (state = initialState, action) => {
     const reducer = actionHandlers[action.type];
     if (reducer) {

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Cell from '../Cell';
 
 const makeCells = (row) => row.map(({ x, y, isOn }) => (
@@ -10,8 +11,8 @@ const makeCells = (row) => row.map(({ x, y, isOn }) => (
   />
 ));
 
-const makeRows = (grid) => grid.map(row => (
-  <div className="game--row">
+const makeRows = (grid) => grid.map((row, index) => (
+  <div key={index} className="game--row">
     {makeCells(row)}
   </div>
 ));
