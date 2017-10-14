@@ -28,3 +28,5 @@ docker-compose up
 ```
 
 At this point you should be able to browse to [http://localhost:8080](http://localhost:8080) to view the site.
+
+*The frontend is broken at the moment. Such is life*
