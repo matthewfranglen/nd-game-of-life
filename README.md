@@ -10,14 +10,21 @@ Running
 
 You need to have [sbt](http://www.scala-sbt.org/index.html) installed to run the backend.
 You need to have node / npm / yarn installed to run the frontend.
+You need to have docker / docker-compose installed to run the containers.
 
 ```bash
 cd backend
-sbt run
+sbt assembly
 ```
 
 ```bash
 cd frontend
 yarn install
-yarn start
+yarn build:dev
 ```
+
+```bash
+docker-compose up
+```
+
+At this point you should be able to browse to [http://localhost:8080](http://localhost:8080) to view the site.
