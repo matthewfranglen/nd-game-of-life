@@ -44,7 +44,7 @@ final private object Offset {
           .foldLeft(firstOffsets)(combine(_, _))
           .filter { isValid _ }
 
-        apply(permutedOffsets, dimensions)
+        applyOffsets(permutedOffsets, dimensions)
       })
       .getOrElse(Seq())
   }
@@ -54,7 +54,7 @@ final private object Offset {
 
   private def isValid(offsets: Seq[Int]): Boolean = offsets.exists(_ != 0)
 
-  private def apply(offsetsCollection: Seq[Seq[Int]], dimensions: Seq[Int]): Seq[Seq[Int]] =
+  private def applyOffsets(offsetsCollection: Seq[Seq[Int]], dimensions: Seq[Int]): Seq[Seq[Int]] =
     offsetsCollection map {
       offsets => offsets
         .zip(dimensions)
