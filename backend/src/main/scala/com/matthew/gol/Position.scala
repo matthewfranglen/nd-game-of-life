@@ -13,7 +13,6 @@ case class Position2d(x: Int, y: Int) extends Position[Position2d] {
     Offset.permute(Seq(x, y))
       .map { case Seq(x, y) => Position2d(x, y) }
 
-
   def distanceTo(other: Position2d): Int =
     max(abs(x - other.x), abs(y - other.y))
 }

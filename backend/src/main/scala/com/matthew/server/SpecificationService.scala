@@ -5,7 +5,6 @@ import com.matthew.gol.Specification
 import com.twitter.inject.annotations.Flag
 import javax.inject.Inject
 
-
 class SpecificationService @Inject()(
   @Flag("born") born: String,
   @Flag("survives") survives: String
