@@ -57,5 +57,8 @@ private object WorldWindow {
   private def getNeighbours[P <: Position[P]](cell: WorldCell[P], cells: Map[P, WorldCell[P]]): Seq[Cell] =
     cell.position.neighbours
       .map { cells get _ }
-      .map { option => if (option.isDefined) option.get.cell else DeadCell }
+      .map { _ match {
+        case Some(worldCell) => worldCell.cell
+        case _ => DeadCell
+      } }
 }
