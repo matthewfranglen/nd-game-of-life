@@ -58,7 +58,7 @@ private object WorldWindow {
     cell.position.neighbours
       .map { cells get _ }
       .map { _ match {
-        case Some(worldCell) => worldCell.cell
+        case Some(WorldCell(cell, _)) => cell
         case _ => DeadCell
       } }
 }
