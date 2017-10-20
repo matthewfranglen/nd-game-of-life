@@ -87,3 +87,46 @@ class WorldPositionNdSpec extends FlatSpec with Matchers {
     world.next shouldEqual expected
   }
 }
+
+class WorldDimensionListSpec extends FlatSpec with Matchers {
+  "The World class" should "create the next barren world" in {
+    val cell = WorldCell(LiveCell, Dimension(0, Dimension(0, End())))
+    val world = World(Seq(cell))
+
+    world.next shouldEqual World(Seq())
+  }
+
+  "The World class" should "create the next living world" in {
+    implicit val spec = Specification(Seq(3), Seq(0, 2, 3))
+    val cell = WorldCell(LiveCell, Dimension(0, Dimension(0, End())))
+    val world = World(Seq(cell))
+
+    world.next shouldEqual world
+  }
+
+  "The World class" should "create the next sustaining world" in {
+    val cells = Seq(
+      WorldCell(LiveCell, Dimension(1, Dimension(0, End()))),
+      WorldCell(LiveCell, Dimension(0, Dimension(1, End()))),
+      WorldCell(LiveCell, Dimension(-1, Dimension(0, End()))),
+      WorldCell(LiveCell, Dimension(0, Dimension(-1, End())))
+    )
+    val world = World(cells)
+
+    world.next shouldEqual world
+  }
+
+  "The World class" should "create the next thriving world" in {
+    val cells = Seq(
+      WorldCell(LiveCell, Dimension(1, Dimension(1, End()))),
+      WorldCell(LiveCell, Dimension(-1, Dimension(1, End()))),
+      WorldCell(LiveCell, Dimension(-1, Dimension(-1, End())))
+    )
+    val world = World(cells)
+
+    val cell = WorldCell(LiveCell, Dimension(0, Dimension(0, End())))
+    val expected = World(Seq(cell))
+
+    world.next shouldEqual expected
+  }
+}
