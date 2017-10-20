@@ -8,6 +8,64 @@ sealed trait Position[P <: Position[P]] {
   def distanceTo(other: P): Int
 }
 
+sealed trait DimensionList[S <: Position[S], N <: DimensionList[N, _]] extends Position[S] {
+
+  def add(other: S): S
+
+  def toOffsets: Seq[S]
+
+  def atOrigin: Boolean
+
+}
+
+sealed case class Dimension[N <: DimensionList[N, _]](value: Int, next: N) extends DimensionList[Dimension[N], N] {
+
+  def neighbours: Seq[Dimension[N]] =
+    for {
+      offsets <- toOffsets
+      if ! offsets.atOrigin
+    } yield add(offsets)
+
+  def distanceTo(other: Dimension[N]): Int =
+    max(abs(value - other.value), next.distanceTo(other.next))
+
+  def add(other: Dimension[N]): Dimension[N] =
+    Dimension(value + other.value, next.add(other.next))
+
+  def toOffsets: Seq[Dimension[N]] =
+    for {
+      offsets <- next.toOffsets
+      offset <- Offset.offsets
+    } yield Dimension(offset, offsets)
+
+  def atOrigin: Boolean =
+    value match {
+      case 0 => next.atOrigin
+      case _ => false
+    }
+
+}
+
+sealed case class End() extends DimensionList[End, End] {
+
+  def neighbours: Seq[End] = Seq()
+
+  def distanceTo(other: End): Int = 0
+
+  def add(other: End): End = End
+
+  def toOffsets: Seq[End] = Seq(End)
+
+  def atOrigin: Boolean = true
+
+}
+object End extends End
+
+
+
+
+
+
 case class Position2d(x: Int, y: Int) extends Position[Position2d] {
   def neighbours: Seq[Position2d] =
     Offset.permute(Seq(x, y))
